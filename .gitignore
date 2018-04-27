@@ -1,0 +1,11 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+build/
+dist/
+node_modules/
+.vscode/
+config/local.json
+dbs/

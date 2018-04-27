@@ -1,0 +1,41 @@
+{
+  "name": "wissenskuche",
+  "version": "1.0.0",
+  "description": "Knowledge kitchen",
+  "main": "dist/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "kitchen": "./node_modules/.bin/tsc && node dist/app.js"
+  },
+  "author": "Mark Carrier",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/config": "0.0.34",
+    "@types/koa": "^2.0.45",
+    "@types/koa-mount": "^3.0.1",
+    "@types/koa-router": "^7.0.27",
+    "@types/koa-static": "^4.0.0",
+    "@types/lodash": "^4.14.104",
+    "@types/seedrandom": "^2.4.27",
+    "@types/uuid": "^3.4.3",
+    "aws-sdk": "^2.215.1",
+    "config": "^1.30.0",
+    "cpx": "^1.5.0",
+    "koa": "^2.5.0",
+    "koa-mount": "^3.0.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^4.0.2",
+    "lodash": "^4.17.5",
+    "node-ziggurat": "0.0.2",
+    "nodemon": "^1.17.2",
+    "seedrandom": "^2.4.3",
+    "short-uuid": "^3.0.0",
+    "tsc-watch": "^1.0.17",
+    "typescript": "^2.7.2",
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.0.0"
+  }
+}
