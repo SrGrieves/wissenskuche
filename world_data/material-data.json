@@ -1,0 +1,82 @@
+[
+  {
+    "id": "4EoP4Gw56oUCmjjyvEvi9x",
+    "commonName": "Wood",
+    "specificName": "White Oak Tree",
+    "type": "natural-physical-material",
+    "description": "Cellulose (C6 H10 O5), lignin (C3 H3 O1), trace minerals.",
+    "qualifiesAs": ["combustible", "solid"],
+    "applicableAttributes": ["humidity"],
+    "unitOfMeasurement": "kg",
+    "naturalPresenceProbability": [{ "minAltitude": 0, "maxAltitude": 1000, "mean": 10, "stdDev": 1 }],
+    "requiredKnowledgeForDetection": ["42TqZFpwLy4ipXS1uvwhop"],
+    "requiredKnowledgeForRecognition": ["tJaG1HEKTG2TCeCuAK2WHF"]
+  },
+  {
+    "id": "wP3cWpEcCyJbBz9Jv5q9tk",
+    "commonName": "Water",
+    "specificName": "Water",
+    "type": "natural-physical-material",
+    "description": "H₂O",
+    "qualifiesAs": ["liquid"],
+    "applicableAttributes": ["salinity", "temperature"],
+    "unitOfMeasurement": "L",
+    "naturalPresenceProbability": [
+        { "minAltitude": -1000, "maxAltitude": 0, "mean": 10000, "stdDev": 10 },
+        { "minAltitude": 1, "maxAltitude": 10, "mean": 3000, "stdDev": 1 }],
+    "requiredKnowledgeForDetection": ["qgHeu54yQgdVYKdEnTLUw6"],
+    "requiredKnowledgeForRecognition": ["qgHeu54yQgdVYKdEnTLUw6"]
+  },
+  {
+    "id": "8DFVQtY9VRoBs8MYTCph2C",
+    "commonName": "Air",
+    "specificName": "Atmosphere",
+    "type": "natural-physical-material",
+    "description": "Mainly nitrogen (78.09%) and oxygen (20.95%). The remaining 1% is made up of argon (0.93%), carbon dioxide (0.039%) and other trace gases (0.003%).",
+    "qualifiesAs": ["liquid"],
+    "applicableAttributes": ["pressure", "temperature", "humidity"],
+    "unitOfMeasurement": "mol",
+    "naturalPresenceProbability": [{ "minAltitude": 0, "maxAltitude": 1000, "mean": 10, "stdDev": 1 }],
+    "requiredKnowledgeForDetection": ["eEd3yDt9hTvnArPKJ52HLB"],
+    "requiredKnowledgeForRecognition": ["eEd3yDt9hTvnArPKJ52HLB"]
+  },
+  {
+    "id": "9ZEJBnSb6pv1QBbZW8B9P5",
+    "commonName": "Dirt",
+    "specificName": "Soil",
+    "type": "natural-physical-material",
+    "description": "Soil is a mixture of organic matter, minerals, gases, liquids, and organisms that together support life.",
+    "qualifiesAs": ["solid"],
+    "applicableAttributes": ["humidity", "temperature"],
+    "unitOfMeasurement": "kg",
+    "naturalPresenceProbability": [{ "minAltitude": 0, "maxAltitude": 1000, "mean": 10, "stdDev": 1 }],
+    "requiredKnowledgeForDetection": ["2e8FtbserAHCHNhYtQTxZC"],
+    "requiredKnowledgeForRecognition": ["2e8FtbserAHCHNhYtQTxZC"]
+  },
+  {
+    "id": "osASA2L9rz8JD1GKW26y7m",
+    "commonName": "Ash",
+    "specificName": "Ash",
+    "type": "chemical-process-byproduct",
+    "description": "Residues that remain after something is burned.  Ashes as the end product of incomplete combustion will be mostly mineral, but usually still contain an amount of combustible organic or other oxidizable residues.",
+    "qualifiesAs": ["solid"],
+    "applicableAttributes": [],
+    "unitOfMeasurement": "kg",
+    "naturalPresenceProbability": [],
+    "requiredKnowledgeForDetection": ["x"],
+    "requiredKnowledgeForRecognition": ["x"]
+  },
+  {
+    "id": "fwGfP3ReGMWB86fQkEcMaN",
+    "commonName": "Survival Multi-tool",
+    "specificName": "Survival Multi-tool", 
+    "type": "tool",
+    "description": "A multi-functional tool that's included in the ship's survival kit suits.",
+    "qualifiesAs": [],
+    "applicableAttributes": [],
+    "unitOfMeasurement": "units",
+    "naturalPresenceProbability": [{ "minAltitude": 0, "maxAltitude": 1000, "mean": 1, "stdDev": 0 }],
+    "requiredKnowledgeForDetection": [],
+    "requiredKnowledgeForRecognition": []
+  }
+]

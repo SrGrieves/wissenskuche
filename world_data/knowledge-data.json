@@ -10,6 +10,45 @@
     }
   },
   {
+    "id": "tJaG1HEKTG2TCeCuAK2WHF",
+    "type": "recognized-material",
+    "name": "White Oak Tree",
+    "personalDescription": "They call white oak but it's very unusual to find an individual specimen with white bark; the usual color is a light gray. The name comes from the color of the finished wood. In the forest it can reach a magnificent height and in the open it develops into a massive broad-topped tree with large branches striking out at wide angles.",
+    "subjectReferences": ["https://en.wikipedia.org/wiki/Quercus_alba"],
+    "proofOfKnowledgeRequirements": {
+        "numberOfProofsRequired": 1,
+        "proofs": [
+            {
+                "id": "3Pho9f7y2VYz5a7humti5C",
+                "type": "simple-question",
+                "query": "What is the usual color of the white oak?",
+                "responseValidation": {
+                    "type": "required-words",
+                    "required-words": [["light"], ["gray","grey"]]
+                }
+            },
+            {
+                "id": "bn1cU8FW6TqwRg8qmhjYU9",
+                "type": "simple-question",
+                "query": " Is white oak a softwood or a hardwood?",
+                "responseValidation": {
+                    "type": "required-words",
+                    "required-words": [["hardwood","hard"]]
+                }
+            },
+            {
+                "id": "9X4YDxoHVHQSSGhNffXER1",
+                "type": "simple-question",
+                "query": "What other tree belongs to the same tree family (Fagaceae)?",
+                "responseValidation": {
+                    "type": "required-words",
+                    "required-words": [["Beech"],["Beeches"]]
+                }
+            }
+        ]
+    }
+  },
+  {
     "id": "qgHeu54yQgdVYKdEnTLUw6",
     "type": "recognized-material",
     "name": "Water",
