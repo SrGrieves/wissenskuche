@@ -1,15 +1,15 @@
 import Router from 'koa-router';
 const router = new Router();
-const Ziggurat = (require("../ziggurat") as any);
+const Ziggurat = (require("../../ziggurat") as any);
 const short = (require("short-uuid") as any);
 const translator = short();
 
-router.get('/tiles/:tileid/resources', async (ctx) => {
-  ctx.body = getResourcesForTile(ctx.params.tileid, ctx.world);
+router.get('/tiles/:tileId/resources', async (ctx) => {
+  ctx.body = getResourcesForTile(ctx.params.tileId, ctx.world);
 })
 
 function getResourcesForTile(tileId: string, world: any): any {
-  let tileMaterials = world.materials.map(function(material: any) { return getMaterialForTile(material, tileId)});
+  let tileMaterials = world.physicalMaterials.map(function(material: any) { return getMaterialForTile(material, tileId)});
  
   return { tileId: tileId, availableMaterials: tileMaterials };
 }

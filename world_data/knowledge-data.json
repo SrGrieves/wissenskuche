@@ -1,0 +1,81 @@
+[
+  {
+    "id": "42TqZFpwLy4ipXS1uvwhop",
+    "type": "recognized-material",
+    "name": "Wood",
+    "personalDescription": "Of course I know what wood is.  It's the hard stuff that grows out of the ground.  People used to make things with it.",
+    "subjectReferences": ["https://en.wikipedia.org/wiki/Wood"],
+    "proofOfKnowledgeRequirements": {
+        "numberOfProofsRequired": 0
+    }
+  },
+  {
+    "id": "qgHeu54yQgdVYKdEnTLUw6",
+    "type": "recognized-material",
+    "name": "Water",
+    "personalDescription": "It's the stuff I have to drink when I'm thirsty and there's no GangaCola in the fridge. H2O, right?",
+    "subjectReferences": ["https://en.wikipedia.org/wiki/Water"],
+    "proofOfKnowledgeRequirements": {
+        "numberOfProofsRequired": 0
+    }
+  },
+  {
+    "id": "eEd3yDt9hTvnArPKJ52HLB",
+    "type": "recognized-material",
+    "name": "Air",
+    "personalDescription": "I know what air is.  If I can breathe, it's a good sign that there's air.  I think that's one of the reason we supposedly chose this plante.  Air is mostly nitrogen (N) plus some oxygen (O) and a sprinkling of other stuff.",
+    "subjectReferences": ["https://en.wikipedia.org/wiki/Atmosphere_of_Earth"],
+    "proofOfKnowledgeRequirements": {
+        "numberOfProofsRequired": 0
+    }
+  },
+  {
+    "id": "2e8FtbserAHCHNhYtQTxZC",
+    "type": "recognized-material",
+    "name": "Soil",
+    "personalDescription": "Ugh, it's everywhere and it's dirty.  I try not to touch it.",
+    "subjectReferences": ["https://en.wikipedia.org/wiki/Soil"],
+    "proofOfKnowledgeRequirements": {
+        "numberOfProofsRequired": 0
+    }
+  },
+  {
+    "id": "66VF8D1feFMfACU8VZUt81",
+    "type": "chemical-reaction",
+    "name": "Basic Combustion",
+    "personalDescription": "It requires wood and makes warm baths possible. Also good for marshmallows.",
+    "subjectReferences": ["https://en.wikipedia.org/wiki/Combustion"],
+    "proofOfKnowledgeRequirements": {
+        "numberOfProofsRequired": 1,
+        "proofs": [
+            {
+                "id": "uZeU2RTLGpmeQB5DdFRhyu",
+                "type": "simple-question",
+                "query": "What three things are required to start a fire?",
+                "responseValidation": {
+                    "type": "required-words",
+                    "required-words": [["fuel","combustible","reductant"], ["air","oxygen","oxidant"],["heat","spark"]]
+                }
+            },
+            {
+                "id": "aSMagz2ysdo2qJ3PBnbzq6",
+                "type": "simple-question",
+                "query": " Incomplete combustion occurs when there is not enough ________ to react?",
+                "responseValidation": {
+                    "type": "required-words",
+                    "required-words": [["air","oxygen","oxidant"]]
+                }
+            },
+            {
+                "id": "8o4xPY6iKrAtNnmCgzmUYR",
+                "type": "simple-question",
+                "query": "What does complete combustion produce?",
+                "responseValidation": {
+                    "type": "required-words",
+                    "required-words": [["carbon"],["dioxide"]]
+                }
+            }
+        ]
+    }
+  }
+]

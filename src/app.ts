@@ -7,14 +7,20 @@ start();
 
 async function start() {
   let world: any = {};
-  world.materials = await loadMaterialDataFromJSON();
+  world.physicalMaterials = await loadMaterialDataFromJSON();
+  world.knowledge = await loadKnowledgeDataFromJSON();
   webserver(world);
   
   //await loadDataIntoDynamo();
 }
 
-async function loadMaterialDataFromJSON: Promise<void> {
-  var materialsJson = require('../world_data/materialsdata.json');
+async function loadMaterialDataFromJSON(): Promise<void> {
+  var materialsJson = require('../world_data/physical-material-data.json');
+  return materialsJson;
+}
+
+async function loadKnowledgeDataFromJSON(): Promise<void> {
+  var materialsJson = require('../world_data/knowledge-data.json');
   return materialsJson;
 }
 

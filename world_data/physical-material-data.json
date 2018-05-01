@@ -1,9 +1,8 @@
 [
   {
     "id": "4EoP4Gw56oUCmjjyvEvi9x",
-    "generalDescription": "Fallen branches",
-    "name": "Fallen branches",
-    "accurateDescription": "Cellulose (C6 H10 O5), lignin (C3 H3 O1), trace minerals.",
+    "name": "Wood",
+    "description": "Cellulose (C6 H10 O5), lignin (C3 H3 O1), trace minerals.",
     "qualifiesAs": ["combustible", "solid"],
     "applicableAttributes": ["humidity"],
     "unitOfMeasurement": "kg",
@@ -11,9 +10,8 @@
   },
   {
     "id": "wP3cWpEcCyJbBz9Jv5q9tk",
-    "generalDescription": "Water",
     "name": "Water",
-    "accurateDescription": "H₂O",
+    "description": "H₂O",
     "qualifiesAs": ["liquid"],
     "applicableAttributes": ["salinity", "temperature"],
     "unitOfMeasurement": "L",
@@ -23,9 +21,8 @@
   },
   {
     "id": "8DFVQtY9VRoBs8MYTCph2C",
-    "generalDescription": "",
     "name": "Air",
-    "accurateDescription": "Mainly nitrogen (78.09%) and oxygen (20.95%). The remaining 1% is made up of argon (0.93%), carbon dioxide (0.039%) and other trace gases (0.003%).",
+    "description": "Mainly nitrogen (78.09%) and oxygen (20.95%). The remaining 1% is made up of argon (0.93%), carbon dioxide (0.039%) and other trace gases (0.003%).",
     "qualifiesAs": ["liquid"],
     "applicableAttributes": ["pressure", "temperature", "humidity"],
     "unitOfMeasurement": "mol",
@@ -33,9 +30,8 @@
   },
   {
     "id": "9ZEJBnSb6pv1QBbZW8B9P5",
-    "generalDescription": "",
     "name": "Dirt",
-    "accurateDescription": "",
+    "description": "",
     "qualifiesAs": ["solid"],
     "applicableAttributes": ["humidity", "temperature"],
     "unitOfMeasurement": "kg",
