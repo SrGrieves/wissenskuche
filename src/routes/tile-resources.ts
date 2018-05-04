@@ -7,13 +7,14 @@ import _ from 'lodash';
 import * as UnitKnowledge from './unit-knowledge';
 
 router.get('/tiles/:tileId/resources', async (ctx) => {
-  ctx.body = await getResourcesForTile(ctx.params.tileId, ctx.world);
+  let tileMaterials = await getResourcesForTile(ctx.params.tileId, ctx.world);
+  ctx.body = { tileId: ctx.params.tileId, availableMaterials: tileMaterials };
 })
 
-async function getResourcesForTile(tileId: string, world: any): Promise<any> {
+export async function getResourcesForTile(tileId: string, world: any): Promise<any> {
 
   let unitsOnTile = ["x","y","z"];
-  let unitsOnTileKnowledgeArrays: any[] = await Promise.all(unitsOnTile.map(async u => await UnitKnowledge.getUnitKnowledge(u, world.knowledge)));
+  let unitsOnTileKnowledgeArrays: any[] = await Promise.all(unitsOnTile.map(async u => await UnitKnowledge.getUnitKnowledge(u, world)));
   let unitsOnTileKnowledge = _.uniqBy([].concat(...unitsOnTileKnowledgeArrays), k => k.id);
   
   //console.log('Units on tile ' + tileId + ' have combined knowledge ' + JSON.stringify(unitsOnTileKnowledge));
@@ -25,7 +26,7 @@ async function getResourcesForTile(tileId: string, world: any): Promise<any> {
                         .filter(m => m != null)
                         .filter(m => m.amount && m.amount > 0);
 
-  return { tileId: tileId, availableMaterials: tileMaterials };
+  return tileMaterials;
 }
 
 function getMaterialForTile(materialDef: any, tileId: string, unitsOnTileKnowledge: any[]) {
@@ -43,22 +44,22 @@ function getMaterialForTile(materialDef: any, tileId: string, unitsOnTileKnowled
     amount = null;
  
   let unitsOnTileKnowledgeIds = unitsOnTileKnowledge.map(k => k.id);
-  console.log("Units have knowledge " + JSON.stringify(unitsOnTileKnowledgeIds));
+  //console.log("Units have knowledge " + JSON.stringify(unitsOnTileKnowledgeIds));
   let isDetected = materialDef.requiredKnowledgeForDetection
                       .filter(k => unitsOnTileKnowledgeIds.indexOf(k) == -1)
                       .length == 0;
-  console.log('To recognize ' + materialDef.commonName + ' you need ' + JSON.stringify(materialDef.requiredKnowledgeForDetection) + ': ' + isDetected);
+  //console.log('To recognize ' + materialDef.commonName + ' you need ' + JSON.stringify(materialDef.requiredKnowledgeForDetection) + ': ' + isDetected);
   
   let isRecognized = materialDef.requiredKnowledgeForRecognition
                       .filter(k => unitsOnTileKnowledgeIds.indexOf(k) == -1)
                       .length == 0;
-  console.log('To recognize ' + materialDef.specificName + ' you need ' + JSON.stringify(materialDef.requiredKnowledgeForRecognition) + ': ' + isRecognized);
+  //console.log('To recognize ' + materialDef.specificName + ' you need ' + JSON.stringify(materialDef.requiredKnowledgeForRecognition) + ': ' + isRecognized);
 
   let material: any;
   if(isRecognized)
-    material = { id: materialDef.id, name: materialDef.specificName, amount: amount, measureUnit: materialDef.unitOfMeasurement, description: materialDef.description }
+    material = { id: materialDef.id, name: materialDef.specificName, amount: amount, measureUnit: materialDef.unitOfMeasurement, description: materialDef.description, qualifiesAs: materialDef.qualifiesAs }
   else if(isDetected)
-    material = { id: materialDef.id, name: materialDef.commonName, amount: amount, measureUnit: materialDef.unitOfMeasurement }
+    material = { id: materialDef.id, name: materialDef.commonName, amount: amount, measureUnit: materialDef.unitOfMeasurement, qualifiesAs: materialDef.qualifiesAs }
   else
     material = { id: materialDef.id, amount: amount }
   

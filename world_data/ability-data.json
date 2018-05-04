@@ -1,0 +1,26 @@
+[
+  {
+    "id": "i7RADNCjqrTgtJPMQtXWa6",
+    "name": "Campfire building",
+    "description": "Burning thing that  provides light and warmth, and heat for cooking.",
+    "requiredKnowledge": ["66VF8D1feFMfACU8VZUt81"],
+    "requiredMaterials": [
+        { "material": "#combustible", "amount": 1},
+        { "material": "#heat-source"},
+        { "material": "#oxidant", "amount": 1}
+    ],
+    "produces": [
+        { "material": "osASA2L9rz8JD1GKW26y7m", "amount": 1},
+        { "material": "8AaLfkFSLCtdbJ4kXsBFTA", "amount": 1},
+        { "material": "roinAwAzE8n8T2cE5CRAAe", "amount": 1}
+    ]
+  },
+    {
+    "id": "3uvhNzhvBGpxdRmXHi7mGr",
+    "name": "Nosepicking",
+    "description": "Ritual cleansing of the nostrils",
+    "requiredKnowledge": [],
+    "requiredMaterials": [],
+    "produces": []
+  }
+]

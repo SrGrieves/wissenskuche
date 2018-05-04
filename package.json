@@ -23,6 +23,7 @@
     "aws-sdk": "^2.215.1",
     "config": "^1.30.0",
     "cpx": "^1.5.0",
+    "eventstore": "^1.13.4",
     "fuzzy-matching": "^0.4.3",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",

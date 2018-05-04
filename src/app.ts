@@ -2,6 +2,10 @@ process.env.AWS_PROFILE = 'mark';
 import AWS from 'aws-sdk';
 import {ServiceConfigurationOptions} from 'aws-sdk/lib/service';
 import webserver from './server';
+const serviceConfigOptions : ServiceConfigurationOptions = {
+    region: "us-west-2",
+    endpoint: "http://localhost:8000"
+  };
 
 start();
 
@@ -9,8 +13,10 @@ async function start() {
   let world: any = {};
   world.physicalMaterials = await loadMaterialDataFromJSON();
   world.knowledge = await loadKnowledgeDataFromJSON();
+  world.abilities = await loadAbilityDataFromJSON();
+  world.config = { dynamo: serviceConfigOptions, clearDb: true };
   //if(false)
-    await createDatabase(true);
+    await createDatabase(world.config );
   webserver(world);
   
 }
@@ -21,29 +27,26 @@ async function loadMaterialDataFromJSON(): Promise<void> {
 }
 
 async function loadKnowledgeDataFromJSON(): Promise<void> {
-  var materialsJson = require('../world_data/knowledge-data.json');
-  return materialsJson;
+  var knowledgeJson = require('../world_data/knowledge-data.json');
+  return knowledgeJson;
 }
 
-async function createDatabase(deleteExisting?: boolean): Promise<void> {
+async function loadAbilityDataFromJSON(): Promise<void> {
+  var abilityJson = require('../world_data/ability-data.json');
+  return abilityJson;
+}
 
-  let serviceConfigOptions : ServiceConfigurationOptions = {
-    region: "us-west-2",
-    endpoint: "http://localhost:8000"
-  };
+async function createDatabase(config: any): Promise<void> {
 
-  let dynamodb = new AWS.DynamoDB(serviceConfigOptions);
+  let dynamodb = new AWS.DynamoDB(config.dynamo);
 
 
-  if(deleteExisting) {
-    var deleteParams = {
-      TableName : "unit-knowledge"
-    };
-
-    await dynamodb.deleteTable(deleteParams).promise();
+  if(config.clearDb) {
+    await dynamodb.deleteTable({ TableName : "unit-knowledge"}).promise();
+    await dynamodb.deleteTable({ TableName : "unit-ability"}).promise();
   }
 
-  var params = {
+  var unitKnowledgeParams = {
     TableName : "unit-knowledge",
     KeySchema: [       
       { AttributeName: "unit", KeyType: "HASH"}  //Partition key
@@ -58,8 +61,26 @@ async function createDatabase(deleteExisting?: boolean): Promise<void> {
     }
   };
   
-  let data = await dynamodb.createTable(params).promise();
-  console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
+  let unitKnowledgeTableData = await dynamodb.createTable(unitKnowledgeParams).promise();
+  console.log("Created unit knowledge table.");
+
+  var unitAbilityParams = {
+    TableName : "unit-ability",
+    KeySchema: [       
+      { AttributeName: "unit", KeyType: "HASH"}  //Partition key
+      //,{ AttributeName: "title", KeyType: "RANGE" }  //Sort key
+    ],
+    AttributeDefinitions: [       
+      { AttributeName: "unit", AttributeType: "S" }      
+    ],
+    ProvisionedThroughput: {       
+      ReadCapacityUnits: 10, 
+      WriteCapacityUnits: 10
+    }
+  };
+  
+  let unitAbilitData = await dynamodb.createTable(unitAbilityParams).promise();
+  console.log("Created unit ability table.");
 }
 
 

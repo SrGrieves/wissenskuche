@@ -1,7 +1,9 @@
 import Koa from 'koa';
-import tileResourceRoutes from './routes/tile-resources';
-import uuidRoutes from './routes/uuids';
-import unitKnowledgeRoutes from './routes/unit-knowledge';
+import TileResourceRoutes from './routes/tile-resources';
+import UuidRoutes from './routes/uuids';
+import UnitKnowledgeRoutes from './routes/unit-knowledge';
+import UnitAbilityRoutes from './routes/unit-ability';
+import PlayerCommandsRoutes from './routes/player-commands';
 import bodyParser from 'koa-bodyparser';
 
 function startServer(world: any): void {
@@ -15,9 +17,11 @@ function startServer(world: any): void {
   });
   app.use(bodyParser());
 
-  app.use(tileResourceRoutes.routes());
-  app.use(uuidRoutes.routes());
-  app.use(unitKnowledgeRoutes.routes());
+  app.use(TileResourceRoutes.routes());
+  app.use(UuidRoutes.routes());
+  app.use(UnitKnowledgeRoutes.routes());
+  app.use(UnitAbilityRoutes.routes());
+  app.use(PlayerCommandsRoutes.routes());
 
   const server = app.listen(PORT, () => {
     console.log(`Server listening on port: ${PORT}`);
