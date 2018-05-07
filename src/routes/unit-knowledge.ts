@@ -4,7 +4,7 @@ const router = new Router();
 import _ from 'lodash';
 const FuzzyMatching = (require('fuzzy-matching') as any);
 const fuzzyMatchMinDistance = 0.4;
-import * as EventRepo from '../repos/unit-event-repo';
+import * as UnitEventRepo from '../repos/unit-event-repo';
 
 router.get('/player/:playerId/units/:unitId/knowledge/', getUnitKnowledgeData);
 router.get('/player/:playerId/units/:unitId/learn/:knowledgeId', getKnowledgeQuestion);
@@ -35,7 +35,7 @@ export async function getUnitKnowledge(unit:string, world: any) {
 }
 
 async function getUnitAcquiredKnowledgeIds(unit:string, world: any): Promise<String[]> {
-  let khistory = await EventRepo.getKnowledgeEventHistory(unit);
+  let khistory = (await UnitEventRepo.getUnitEventHistory(unit)).filter(uh => uh.payload.eventName == "acquiredKnowledge");
   let knowledgeIds = khistory.map(kh => kh.payload.knowledge);
 
   return knowledgeIds;
@@ -100,8 +100,8 @@ function checkIfWordGroupRequirementMatchesAnswer(answerWords: String[], validAn
 }
 
 async function addKnowledgeToUnit(unit: string, knowledge: string, world: any): Promise<void> {
-  let knowledgeEvent = { unit: unit, knowledge: knowledge };
-  EventRepo.saveKnowledgeEvent(knowledgeEvent);
+  let unitEvent = { eventName: "acquiredKnowledge", unit: unit, knowledge: knowledge };
+  UnitEventRepo.saveUnitEvent(unitEvent);
 }
 
 export async function findTotalAvailableMaterialOnTileFor(world: any, tile: string, materialQuery: string) {}

@@ -52,8 +52,9 @@ async function processAbilityCommand(ctx: Koa.Context) {
   let command:Command = ctx.request.body;
 
   try {
-    await UnitAbilities.attemptToDo(ctx.world, command);
+    let successMsg = await UnitAbilities.attemptToDo(ctx.world, command);
     ctx.status = 200;
+    ctx.body = successMsg;
   }
   catch (abilityErr) {
     if(abilityErr.name && !isNaN(parseInt(abilityErr.name))) {

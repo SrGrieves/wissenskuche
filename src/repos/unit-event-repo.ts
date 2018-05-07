@@ -2,10 +2,29 @@ const eventstore = (require('eventstore') as any);
 let es = eventstore();
 es.init();
 
+interface UnitEvent {
+  eventName: string;
+  unit: string;
+  knowledge?: string;
+  ability?: string;
+  abilitySucceeded?: Boolean
+}
 
-export async function saveKnowledgeEvent(event: any) {
+interface UnitEventStreamItem {
+  streamId: string;
+  aggregateId: string;
+  aggregate: string;
+  context: string;
+  streamRevision: Number;
+  commitId: string;
+  commitSequence: Number;
+  commitStamp: Date
+  payload: UnitEvent;
+}
+
+export async function saveUnitEvent(event: UnitEvent) {
   return new Promise(function(resolve, reject) {
-    es.getEventStream({ aggregateId: event.unit, aggregate: 'unit', context: 'knowledge'} , function(err: any, stream: any) {
+    es.getEventStream({ aggregateId: event.unit, aggregate: 'unit', context: 'universe'} , function(err: any, stream: any) {
       stream.addEvent(event);
 
       stream.commit(function(err: any, stream: any) {
@@ -21,14 +40,14 @@ export async function saveKnowledgeEvent(event: any) {
   });
 }
 
-export async function getKnowledgeEventHistory(unitId: string) {
-  return new Promise(function(resolve, reject) {
-    es.getEventStream({ aggregateId: unitId, aggregate: 'unit', context: 'knowledge'}, function(err: any, stream: any) {
+export async function getUnitEventHistory(unitId: string): Promise<UnitEventStreamItem[]> {
+  return new Promise<UnitEventStreamItem[]>(function(resolve, reject) {
+    es.getEventStream({ aggregateId: unitId, aggregate: 'unit', context: 'universe'}, function(err: any, stream: any) {
       if(err) {
           reject(err);
         }
         else {
-          var history = stream.events; // the original event will be in events[i].payload
+          var history: UnitEventStreamItem[] = stream.events; // the original event will be in events[i].payload
           // myAggregate.loadFromHistory(history);
           resolve(history);
       }

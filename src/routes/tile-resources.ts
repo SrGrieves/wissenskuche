@@ -5,13 +5,14 @@ const short = (require("short-uuid") as any);
 const translator = short();
 import _ from 'lodash';
 import * as UnitKnowledge from './unit-knowledge';
+import * as TileEventRepo from '../repos/tile-event-repo';
 
 router.get('/tiles/:tileId/resources', async (ctx) => {
-  let tileMaterials = await getResourcesForTile(ctx.params.tileId, ctx.world);
+  let tileMaterials = await getResourcesForTile(ctx.params.tileId, ctx.world, true);
   ctx.body = { tileId: ctx.params.tileId, availableMaterials: tileMaterials };
 })
 
-export async function getResourcesForTile(tileId: string, world: any): Promise<any> {
+export async function getResourcesForTile(tileId: string, world: any, filterToUnitKnowldge: boolean): Promise<any> {
 
   let unitsOnTile = ["x","y","z"];
   let unitsOnTileKnowledgeArrays: any[] = await Promise.all(unitsOnTile.map(async u => await UnitKnowledge.getUnitKnowledge(u, world)));
@@ -19,9 +20,19 @@ export async function getResourcesForTile(tileId: string, world: any): Promise<a
   
   //console.log('Units on tile ' + tileId + ' have combined knowledge ' + JSON.stringify(unitsOnTileKnowledge));
 
-  let tileMaterials = world.physicalMaterials
+  let originalMaterials = world.physicalMaterials;
+  let materialChanges = (await TileEventRepo.getTileEventHistory(tileId))
+                                .filter(e => e.payload.eventName == "resourceChanged")
+                                .map(e => e.payload);
+
+  let tileMaterials = originalMaterials
                         .map(function(material: any) { 
-                            return getMaterialForTile(material, tileId, unitsOnTileKnowledge)
+                            return getMaterialForTile(
+                                          material, 
+                                          tileId, 
+                                          unitsOnTileKnowledge, 
+                                          materialChanges.filter(c => c.material == material.id),
+                                          filterToUnitKnowldge)
                           })
                         .filter(m => m != null)
                         .filter(m => m.amount && m.amount > 0);
@@ -29,7 +40,9 @@ export async function getResourcesForTile(tileId: string, world: any): Promise<a
   return tileMaterials;
 }
 
-function getMaterialForTile(materialDef: any, tileId: string, unitsOnTileKnowledge: any[]) {
+const add = (a: number, b: number): number => a + b
+
+function getMaterialForTile(materialDef: any, tileId: string, unitsOnTileKnowledge: any[], materialChanges: any[], filterToUnitKnowldge: boolean) {
   const z = new Ziggurat(stringToDigits(materialDef.id + tileId));
   let randomFromNormal = z.getNextGaussian();
   let altitude = 1; //should fetch this from Joel's api
@@ -38,10 +51,15 @@ function getMaterialForTile(materialDef: any, tileId: string, unitsOnTileKnowled
                                         return altitude >= npp.minAltitude && altitude <= npp.maxAltitude 
                                       });
   let amount: any;
-  if(matchedAltitudePresenceProb.length)
-    amount = (randomFromNormal * matchedAltitudePresenceProb[0].stdDev) + matchedAltitudePresenceProb[0].mean;
-  else
-    amount = null;
+  if(matchedAltitudePresenceProb.length) {    
+    let amountChange = materialChanges.map(c => c.amount).reduce(add,0);
+    amount = (randomFromNormal * matchedAltitudePresenceProb[0].stdDev) 
+                + matchedAltitudePresenceProb[0].mean
+                + amountChange;
+  }
+  else {
+    amount = materialChanges.map(c => c.amount).reduce(add,0);;    
+  }
  
   let unitsOnTileKnowledgeIds = unitsOnTileKnowledge.map(k => k.id);
   //console.log("Units have knowledge " + JSON.stringify(unitsOnTileKnowledgeIds));
@@ -56,7 +74,7 @@ function getMaterialForTile(materialDef: any, tileId: string, unitsOnTileKnowled
   //console.log('To recognize ' + materialDef.specificName + ' you need ' + JSON.stringify(materialDef.requiredKnowledgeForRecognition) + ': ' + isRecognized);
 
   let material: any;
-  if(isRecognized)
+  if(isRecognized || filterToUnitKnowldge == false)
     material = { id: materialDef.id, name: materialDef.specificName, amount: amount, measureUnit: materialDef.unitOfMeasurement, description: materialDef.description, qualifiesAs: materialDef.qualifiesAs }
   else if(isDetected)
     material = { id: materialDef.id, name: materialDef.commonName, amount: amount, measureUnit: materialDef.unitOfMeasurement, qualifiesAs: materialDef.qualifiesAs }

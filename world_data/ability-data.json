@@ -5,15 +5,18 @@
     "description": "Burning thing that  provides light and warmth, and heat for cooking.",
     "requiredKnowledge": ["66VF8D1feFMfACU8VZUt81"],
     "requiredMaterials": [
-        { "material": "#combustible", "amount": 1},
-        { "material": "#heat-source"},
-        { "material": "#oxidant", "amount": 1}
+        { "material": "#combustible", "consumptionAmount": 1},
+        { "material": "#heat-source", "consumptionAmount": 0},
+        { "material": "#oxidant", "consumptionAmount": 0.001 }
     ],
     "produces": [
         { "material": "osASA2L9rz8JD1GKW26y7m", "amount": 1},
-        { "material": "8AaLfkFSLCtdbJ4kXsBFTA", "amount": 1},
-        { "material": "roinAwAzE8n8T2cE5CRAAe", "amount": 1}
-    ]
+        { "material": "8AaLfkFSLCtdbJ4kXsBFTA", "amount": 0.01},
+        { "material": "roinAwAzE8n8T2cE5CRAAe", "amount": 1000}
+    ],
+    "probabilityOfSuccess": 0.6,
+    "failureMessage": "You huffed and you puffed, lots of smoke but no fire.",
+    "successMessage": "Behold! You have create fire."
   },
     {
     "id": "3uvhNzhvBGpxdRmXHi7mGr",
@@ -21,6 +24,10 @@
     "description": "Ritual cleansing of the nostrils",
     "requiredKnowledge": [],
     "requiredMaterials": [],
-    "produces": []
+    "consumes": [],
+    "produces": [],
+    "probabilityOfSuccess": 0.9,
+    "failureMessage": "Nothing good came out.",
+    "successMessage": "Oh, that felt great."
   }
 ]
