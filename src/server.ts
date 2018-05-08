@@ -9,7 +9,7 @@ import bodyParser from 'koa-bodyparser';
 function startServer(world: any): void {
   console.log('Starting web server');
   const app = new Koa();
-  const PORT = process.env.PORT || 8080;
+  const PORT = world.config.get('port') || 8090;
 
   app.use(async (ctx, next) => {
     ctx.world = world;

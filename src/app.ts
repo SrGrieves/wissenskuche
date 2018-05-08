@@ -1,4 +1,5 @@
 import webserver from './server';
+import config from 'config';
 
 start();
 
@@ -7,7 +8,7 @@ async function start() {
   world.physicalMaterials = await loadMaterialDataFromJSON();
   world.knowledge = await loadKnowledgeDataFromJSON();
   world.abilities = await loadAbilityDataFromJSON();
-  world.config = {  };
+  world.config = config;
   webserver(world);
 }
 

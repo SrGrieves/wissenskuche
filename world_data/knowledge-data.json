@@ -4,7 +4,7 @@
     "type": "recognized-material",
     "name": "Wood",
     "personalDescription": "Of course I know what wood is.  It's the hard stuff that grows out of the ground.  People used to make things with it.",
-    "subjectReferences": ["https://en.wikipedia.org/wiki/Wood"],
+    "subjectReferences": [ { "href": "https://en.wikipedia.org/wiki/Wood" }],
     "proofOfKnowledgeRequirements": {
         "numberOfProofsRequired": 0
     }
@@ -14,7 +14,7 @@
     "type": "recognized-material",
     "name": "White Oak Tree",
     "personalDescription": "They call white oak but it's very unusual to find an individual specimen with white bark; the usual color is a light gray. The name comes from the color of the finished wood. In the forest it can reach a magnificent height and in the open it develops into a massive broad-topped tree with large branches striking out at wide angles.",
-    "subjectReferences": ["https://en.wikipedia.org/wiki/Quercus_alba"],
+    "subjectReferences": [{ "href": "https://en.wikipedia.org/wiki/Quercus_alba" }],
     "proofOfKnowledgeRequirements": {
         "numberOfProofsRequired": 1,
         "proofs": [
@@ -53,7 +53,7 @@
     "type": "recognized-material",
     "name": "Water",
     "personalDescription": "It's the stuff I have to drink when I'm thirsty and there's no GangaCola in the fridge. H2O, right?",
-    "subjectReferences": ["https://en.wikipedia.org/wiki/Water"],
+    "subjectReferences": [{ "href": "https://en.wikipedia.org/wiki/Water" }],
     "proofOfKnowledgeRequirements": {
         "numberOfProofsRequired": 0
     }
@@ -63,7 +63,7 @@
     "type": "recognized-material",
     "name": "Air",
     "personalDescription": "I know what air is.  If I can breathe, it's a good sign that there's air.  I think that's one of the reason we supposedly chose this plante.  Air is mostly nitrogen (N) plus some oxygen (O) and a sprinkling of other stuff.",
-    "subjectReferences": ["https://en.wikipedia.org/wiki/Atmosphere_of_Earth"],
+    "subjectReferences": [{ "href": "https://en.wikipedia.org/wiki/Atmosphere_of_Earth" }],
     "proofOfKnowledgeRequirements": {
         "numberOfProofsRequired": 0
     }
@@ -73,7 +73,7 @@
     "type": "recognized-material",
     "name": "Soil",
     "personalDescription": "Ugh, it's everywhere and it's dirty.  I try not to touch it.",
-    "subjectReferences": ["https://en.wikipedia.org/wiki/Soil"],
+    "subjectReferences": [{ "href": "https://en.wikipedia.org/wiki/Soil" }],
     "proofOfKnowledgeRequirements": {
         "numberOfProofsRequired": 0
     }
@@ -83,7 +83,7 @@
     "type": "chemical-reaction",
     "name": "Basic Combustion",
     "personalDescription": "It requires wood and makes warm baths possible. Also good for marshmallows.",
-    "subjectReferences": ["https://en.wikipedia.org/wiki/Combustion"],
+    "subjectReferences": [{ "href": "https://en.wikipedia.org/wiki/Combustion" }],
     "proofOfKnowledgeRequirements": {
         "numberOfProofsRequired": 1,
         "proofs": [

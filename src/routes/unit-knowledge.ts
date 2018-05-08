@@ -5,18 +5,24 @@ import _ from 'lodash';
 const FuzzyMatching = (require('fuzzy-matching') as any);
 const fuzzyMatchMinDistance = 0.4;
 import * as UnitEventRepo from '../repos/unit-event-repo';
+import axios from 'axios';
 
-router.get('/player/:playerId/units/:unitId/knowledge/', getUnitKnowledgeData);
-router.get('/player/:playerId/units/:unitId/learn/:knowledgeId', getKnowledgeQuestion);
+router.get('/player/:playerId/units/:unitId/brain/', getUnitKnowledgeData);
+router.get('/player/:playerId/knowledge/', getPlayerKnowledge);
+router.get('/player/:playerId/units/:unitId/brain/learn/:knowledgeId', getKnowledgeLearning);
 
 async function getUnitKnowledgeData(ctx: Koa.Context) {
   let unitKnowledge = await getUnitKnowledge(ctx.params.unitId, ctx.world);
   let unitKnowledgeIds = unitKnowledge.map(k => k.id);
   let attainableKnowledge = ctx.world.knowledge
     .filter(k => unitKnowledgeIds.indexOf(k.id) == -1)
-    .map(k => { return mapKnowledgeRecordToAttainableKnowledgeViewRecord(k, ctx.request.href) });
+    .map(k => { return mapKnowledgeRecordToAttainableKnowledgeViewRecord(k, ctx.params.playerId, ctx.params.unitId, ctx.world) });
 
-  ctx.body = { acquiredKnowledge: unitKnowledge, attainableKnowledge: attainableKnowledge };
+  ctx.body = { 
+    href: ctx.world.config.get('selfReferenceUrlPrefix') + '/player/' + ctx.params.playerId + '/units/' + ctx.params.unitId + '/brain/';
+    acquiredKnowledge: unitKnowledge, 
+    attainableKnowledge: attainableKnowledge 
+  };
 }
 
 export async function getUnitKnowledge(unit:string, world: any) {
@@ -41,30 +47,59 @@ async function getUnitAcquiredKnowledgeIds(unit:string, world: any): Promise<Str
   return knowledgeIds;
 }
 
-async function getKnowledgeQuestion(ctx: Koa.Context) {
+async function getPlayerKnowledge(ctx: Koa.Context) {
+  let gUrl1 = ctx.world.config.get('gaeaReferenceUrlPrefix') + '/player/' + ctx.params.playerId;
+  let playerName = (await axios.get(gUrl1)).data.name;
+  
+  let gUrl2 = gUrl1 + '/units/';
+  let allUnitsResponse = await axios.get(gUrl2);
+  
+  let playerUnitIds = allUnitsResponse.data.filter(u => u.player == playerName && u.type == "human").map(u => u.id);
+
+  let playerUnitCombinedKnowledgeTasks = playerUnitIds.map(function(uid) { return getUnitKnowledge(uid, ctx.world) });
+  let playerUnitCombinedKnowledgeArrays = await Promise.all(playerUnitCombinedKnowledgeTasks);
+  let playerUnitCombinedKnowledge = _.uniqBy([].concat(...playerUnitCombinedKnowledgeArrays), k => k.id);
+
+  ctx.body = { combinedKnowledge: playerUnitCombinedKnowledge };
+}
+
+async function getKnowledgeLearning(ctx: Koa.Context) {
   let knowledge = ctx.world.knowledge.filter(k => k.id == ctx.params.knowledgeId)[0];
   let proof = _.sample(knowledge.proofOfKnowledgeRequirements.proofs);
   ctx.body = {
-    "query-id": proof.id,
+    "href": ctx.world.config.get('selfReferenceUrlPrefix') + "/player/" + ctx.params.playerId + "/units/" + ctx.params.unitId + "/brain/learn/" + knowledge.id,
+    "knowledgeId": knowledge.id,
+    "learnQueryId": proof.id,
     "type": proof.type,
     "query": proof.query,
-    "answerPostURI": ctx.request.href + "/answer/" + proof.id
+    "answer": { 
+      "href": ctx.world.config.get('selfReferenceUrlPrefix') + "/player/" + ctx.params.playerId + "/commands",
+      "rel":["form"], 
+      "method": "POST",
+      "value": [
+        { "name": "command", "value": "learn" },
+        { "name": "unit", "value": ctx.params.unitId },
+        { "name": "knowledge", "value": knowledge.id },
+        { "name": "learnQuery", "value": proof.id },
+        { "name": "learnQueryAnswer", "type": "string", "desc": "Provide your answer as a short essay.", "maxlength": 10000 }
+      ]
+    }
   }
 }
 
 export async function attemptToLearn(world: any, command: any): Promise<void> {
   
   let knowledge = world.knowledge.filter(k => k.id == command.knowledge)[0];
-  let knowledgeQuery = knowledge.proofOfKnowledgeRequirements.proofs.filter(p => p.id == command.knowledgeQuery)[0];
+  let learnQuery = knowledge.proofOfKnowledgeRequirements.proofs.filter(p => p.id == command.learnQuery)[0];
   
-  if(!command.knowledgeQueryAnswer || !knowledge || !knowledgeQuery) {
+  if(!command.learnQueryAnswer || !knowledge || !learnQuery) {
     let learnErr = new Error("Invalid learn command. You must provide knowledge, knowledgeQuery and knowledgeQueryAnswer.");
     learnErr.name = "400";
     throw learnErr;
   }
 
-  let answerWords: String[] = command.knowledgeQueryAnswer.split(/[ ,]+/).filter(Boolean);
-  let validAnswerWordGroups: [String[]] = knowledgeQuery.responseValidation["required-words"];
+  let answerWords: String[] = command.learnQueryAnswer.split(/[ ,]+/).filter(Boolean);
+  let validAnswerWordGroups: [String[]] = learnQuery.responseValidation["required-words"];
 
   let matches = validAnswerWordGroups.map(validAnswerWords => { return checkIfWordGroupRequirementMatchesAnswer(answerWords, validAnswerWords)});
 
@@ -80,8 +115,8 @@ export async function attemptToLearn(world: any, command: any): Promise<void> {
   }
 }
 
-function mapKnowledgeRecordToAttainableKnowledgeViewRecord(k: any, baseURL: string) {
-  return { "id": k.id, "type": k.type, "name": k.name, "learnURI": baseURL .replace('/knowledge','/learn/') + k.id };
+function mapKnowledgeRecordToAttainableKnowledgeViewRecord(k: any, player: string, unit: string, world: any) {
+  return { "id": k.id, "type": k.type, "name": k.name, "learn": { href: world.config.get('selfReferenceUrlPrefix') + '/player/' + player + '/units/' + unit + '/brain/learn/' + k.id} };
 }
 
 function mapKnowledgeRecordToAcquiredKnowledgeViewRecord(k: any) {

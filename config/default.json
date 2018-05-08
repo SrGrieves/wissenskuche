@@ -1,0 +1,5 @@
+{
+  "port": 8080,
+  "selfReferenceUrlPrefix": "http://markbook.markcarrier.info:8080",
+  "gaeaReferenceUrlPrefix": "http://g.carrier.engineering"
+}

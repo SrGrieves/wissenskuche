@@ -14,9 +14,13 @@ router.get('/player/:playerId/units/:unitId/abilities/', getUnitAbilityData);
 async function getUnitAbilityData(ctx: Koa.Context) {
 
   ctx.body = { 
+        self: { 
+          href: ctx.world.config.get('selfReferenceUrlPrefix') + "/player/" + ctx.params.playerId + "/units/" + ctx.params.unitId + "/abilities",
+          rel: [ "collection"]
+        },
         unit: ctx.params.unitId,
-        abilities: (await getUnitAbilities(ctx.world, ctx.params.unitId))
-                    .map(mapAbilityToAcquiredAbilityView)
+        value: (await getUnitAbilities(ctx.world, ctx.params.unitId))
+                    .map(a => mapAbilityToAcquiredAbilityView(ctx.world, ctx.params.playerId, ctx.params.unitId, a))
       };
 }
 
@@ -35,9 +39,28 @@ function unitHasAllKnowledgeForAbility(unitKnowledgeIds: any, ability: any): boo
   return missingKnowledge.length == 0;
 }
 
-function mapAbilityToAcquiredAbilityView(ability: any) {
-  return { id: ability.id, name: ability.name }
+function mapAbilityToAcquiredAbilityView(world: any, player: string, unit: string, ability: any) {
+  return { 
+
+    id: ability.id, 
+    name: ability.name,
+    description: ability.description,
+    consumes: ability.consumes,
+    do: { 
+      "href": world.config.get('selfReferenceUrlPrefix') + "/player/" + player + "/commands",
+      "rel":["form"], 
+      "method": "POST",
+      "value": [
+        { "name": "command", "value": "do" },
+        { "name": "unit", "value": unit },
+        { "name": "ability", "value": ability.id },
+        
+      ]
+    }
+    }
+  }
 }
+
 
 export async function attemptToDo(world: any, command: any): Promise<string> {
 

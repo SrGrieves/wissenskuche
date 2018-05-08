@@ -38,6 +38,7 @@ async function processKnowledgeCommand(ctx: Koa.Context) {
   try {
     await UnitKnowledge.attemptToLearn(ctx.world, command);
     ctx.status = 200;
+    ctx.body = "You are correct. Knowledge acquired."
   } catch (learnErr) {    
     if(learnErr.name && !isNaN(parseInt(learnErr.name))) {
       ctx.status = parseInt(learnErr.name);
