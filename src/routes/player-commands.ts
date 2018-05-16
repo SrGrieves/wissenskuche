@@ -22,7 +22,7 @@ async function processCommand(ctx: Koa.Context) {
 }
 
 async function processKnowledgeCommand(ctx: Koa.Context) {
-  let command:World.Command = ctx.request.body;
+  let command:World.LearnCommand = ctx.request.body;
   
   try {
     await UnitKnowledge.attemptToLearn(ctx.world, command);
@@ -39,7 +39,7 @@ async function processKnowledgeCommand(ctx: Koa.Context) {
 }
 
 async function processAbilityCommand(ctx: Koa.Context) {
-  let command:World.Command = ctx.request.body;
+  let command:World.AbilityCommand = ctx.request.body;
 
   try {
     let successMsg = await UnitAbilities.attemptToDo(ctx.world, command);

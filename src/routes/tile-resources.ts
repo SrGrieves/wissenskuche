@@ -18,7 +18,7 @@ export async function getResourcesForTile(tileId: string, world: World.World, fi
 
   let tileInfo = await gaea.getTile(world, tileId);
   let unitsOnTile = tileInfo.occupants.filter(o => o.player == world.me.name)
-  let unitsOnTileKnowledgeArrays: any[] = await Promise.all(unitsOnTile.map(async u => await UnitKnowledge.getUnitKnowledge(u, world)));
+  let unitsOnTileKnowledgeArrays: any[] = await Promise.all(unitsOnTile.map(async u => await UnitKnowledge.getUnitKnowledge(u.id, world)));
   let unitsOnTileKnowledge = _.uniqBy([].concat(...unitsOnTileKnowledgeArrays), k => k.id);
   
   //console.log('Units on tile ' + tileId + ' have combined knowledge ' + JSON.stringify(unitsOnTileKnowledge));

@@ -101,11 +101,11 @@ export async function attemptToDo(world: World.World, command: World.AbilityComm
     if(abilitySuccess) {
       let tileEvents = ability.produces.map(
         function(consumption: any) { 
-          return createTileResourceChangeEvent(unitTile, consumption.material, consumption.amount)
+          return createTileResourceChangeEvent(unitInfo.tile, consumption.material, consumption.amount)
         });
 
       if(tileEvents.length)
-        TileEventRepo.saveTileEvents(unitTile, tileEvents);
+        TileEventRepo.saveTileEvents(unitInfo.tile, tileEvents);
       return ability.successMessage
     } else {
       let abilityErr = new Error(ability.failureMessage);
@@ -153,7 +153,7 @@ function tileHasRequiredMaterial(tileResources: any, materialRequirement: any) {
   return foundSome && (totalAvailable >= materialRequirement.consumptionAmount);
 }
 
-const add = (a: Number, b: Number): Number => a + b
+const add = (a: number, b: number): number => a + b
 
 
 
