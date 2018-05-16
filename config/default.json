@@ -1,5 +1,9 @@
 {
   "port": 8080,
   "selfReferenceUrlPrefix": "http://markbook.markcarrier.info:8080",
-  "gaeaReferenceUrlPrefix": "http://g.carrier.engineering"
+  "gaeaReferenceUrlPrefix": "http://g.carrier.engineering",
+  "me": {
+    "name": "mark",
+    "player": "hwX6aOr7"
+  }
 }

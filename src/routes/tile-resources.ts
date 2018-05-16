@@ -1,3 +1,4 @@
+import * as World from '../domain/world-entities';
 import Router from 'koa-router';
 const router = new Router();
 const Ziggurat = (require("../../ziggurat") as any);
@@ -6,15 +7,17 @@ const translator = short();
 import _ from 'lodash';
 import * as UnitKnowledge from './unit-knowledge';
 import * as TileEventRepo from '../repos/tile-event-repo';
+import * as gaea from '../io/gaea';
 
 router.get('/tiles/:tileId/resources', async (ctx) => {
   let tileMaterials = await getResourcesForTile(ctx.params.tileId, ctx.world, true);
   ctx.body = { tileId: ctx.params.tileId, availableMaterials: tileMaterials };
 })
 
-export async function getResourcesForTile(tileId: string, world: any, filterToUnitKnowldge: boolean): Promise<any> {
+export async function getResourcesForTile(tileId: string, world: World.World, filterToUnitKnowldge: boolean): Promise<any> {
 
-  let unitsOnTile = ["x","y","z"];
+  let tileInfo = await gaea.getTile(world, tileId);
+  let unitsOnTile = tileInfo.occupants.filter(o => o.player == world.me.name)
   let unitsOnTileKnowledgeArrays: any[] = await Promise.all(unitsOnTile.map(async u => await UnitKnowledge.getUnitKnowledge(u, world)));
   let unitsOnTileKnowledge = _.uniqBy([].concat(...unitsOnTileKnowledgeArrays), k => k.id);
   
@@ -42,7 +45,7 @@ export async function getResourcesForTile(tileId: string, world: any, filterToUn
 
 const add = (a: number, b: number): number => a + b
 
-function getMaterialForTile(materialDef: any, tileId: string, unitsOnTileKnowledge: any[], materialChanges: any[], filterToUnitKnowldge: boolean) {
+function getMaterialForTile(materialDef: World.Material, tileId: string, unitsOnTileKnowledge: any[], materialChanges: any[], filterToUnitKnowldge: boolean) {
   const z = new Ziggurat(stringToDigits(materialDef.id + tileId));
   let randomFromNormal = z.getNextGaussian();
   let altitude = 1; //should fetch this from Joel's api

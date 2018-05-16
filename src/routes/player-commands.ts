@@ -5,23 +5,12 @@ import _ from 'lodash';
 import * as UnitKnowledge from './unit-knowledge';
 import * as TileResources from './tile-resources';
 import * as UnitAbilities from './unit-ability';
-
-interface Command {
-  unit: string;
-  command: string;
-  fromTile?: string;
-  toTile?: string;
-  knowledge?: string;
-  knowledgeQuery?: string;
-  knowledgeQueryAnswer?: string;
-  ability?: string;
-}
-
+import * as World from '../domain/world-entities'
 
 router.post('/player/:playerId/commands', processCommand);
 
 async function processCommand(ctx: Koa.Context) {
-  let command:Command = ctx.request.body;
+  let command:World.Command = ctx.request.body;
 
   if(command.command == "learn")
     await processKnowledgeCommand(ctx);
@@ -33,7 +22,7 @@ async function processCommand(ctx: Koa.Context) {
 }
 
 async function processKnowledgeCommand(ctx: Koa.Context) {
-  let command:Command = ctx.request.body;
+  let command:World.Command = ctx.request.body;
   
   try {
     await UnitKnowledge.attemptToLearn(ctx.world, command);
@@ -50,7 +39,7 @@ async function processKnowledgeCommand(ctx: Koa.Context) {
 }
 
 async function processAbilityCommand(ctx: Koa.Context) {
-  let command:Command = ctx.request.body;
+  let command:World.Command = ctx.request.body;
 
   try {
     let successMsg = await UnitAbilities.attemptToDo(ctx.world, command);

@@ -6,6 +6,8 @@ const FuzzyMatching = (require('fuzzy-matching') as any);
 const fuzzyMatchMinDistance = 0.4;
 import * as UnitEventRepo from '../repos/unit-event-repo';
 import axios from 'axios';
+import * as World from '../domain/world-entities';
+import * as gaea from '../io/gaea';
 
 router.get('/player/:playerId/units/:unitId/brain/', getUnitKnowledgeData);
 router.get('/player/:playerId/knowledge/', getPlayerKnowledge);
@@ -19,7 +21,7 @@ async function getUnitKnowledgeData(ctx: Koa.Context) {
     .map(k => { return mapKnowledgeRecordToAttainableKnowledgeViewRecord(k, ctx.params.playerId, ctx.params.unitId, ctx.world) });
 
   ctx.body = { 
-    href: ctx.world.config.get('selfReferenceUrlPrefix') + '/player/' + ctx.params.playerId + '/units/' + ctx.params.unitId + '/brain/';
+    href: ctx.world.config.get('selfReferenceUrlPrefix') + '/player/' + ctx.params.playerId + '/units/' + ctx.params.unitId + '/brain/',
     acquiredKnowledge: unitKnowledge, 
     attainableKnowledge: attainableKnowledge 
   };
@@ -40,7 +42,7 @@ export async function getUnitKnowledge(unit:string, world: any) {
   return unitKnowledge;
 }
 
-async function getUnitAcquiredKnowledgeIds(unit:string, world: any): Promise<String[]> {
+async function getUnitAcquiredKnowledgeIds(unit:string, world: World.World): Promise<String[]> {
   let khistory = (await UnitEventRepo.getUnitEventHistory(unit)).filter(uh => uh.payload.eventName == "acquiredKnowledge");
   let knowledgeIds = khistory.map(kh => kh.payload.knowledge);
 
@@ -66,6 +68,15 @@ async function getPlayerKnowledge(ctx: Koa.Context) {
 async function getKnowledgeLearning(ctx: Koa.Context) {
   let knowledge = ctx.world.knowledge.filter(k => k.id == ctx.params.knowledgeId)[0];
   let proof = _.sample(knowledge.proofOfKnowledgeRequirements.proofs);
+  let world: World.World = ctx.world;
+  let unit = ctx.params.unitId;
+  let unitInfo = await gaea.getUnit(world, world.me.player, unit);
+  if(unitInfo.type != "human") {
+    let learnErr = new Error("Only humans can learn.");
+    learnErr.name = "400";
+    throw learnErr;
+  }
+
   ctx.body = {
     "href": ctx.world.config.get('selfReferenceUrlPrefix') + "/player/" + ctx.params.playerId + "/units/" + ctx.params.unitId + "/brain/learn/" + knowledge.id,
     "knowledgeId": knowledge.id,
@@ -87,13 +98,20 @@ async function getKnowledgeLearning(ctx: Koa.Context) {
   }
 }
 
-export async function attemptToLearn(world: any, command: any): Promise<void> {
+export async function attemptToLearn(world: World.World, command: World.LearnCommand): Promise<void> {
   
   let knowledge = world.knowledge.filter(k => k.id == command.knowledge)[0];
   let learnQuery = knowledge.proofOfKnowledgeRequirements.proofs.filter(p => p.id == command.learnQuery)[0];
-  
-  if(!command.learnQueryAnswer || !knowledge || !learnQuery) {
-    let learnErr = new Error("Invalid learn command. You must provide knowledge, knowledgeQuery and knowledgeQueryAnswer.");
+
+  if(!command.unit || !command.learnQueryAnswer || !knowledge || !learnQuery) {
+    let learnErr = new Error("Invalid learn command. You must provide unit, knowledge, learnQuery and learnQueryAnswer.");
+    learnErr.name = "400";
+    throw learnErr;
+  }
+
+  let unitInfo = await gaea.getUnit(world, world.me.player, command.unit);
+  if(unitInfo.type != "human") {
+    let learnErr = new Error("Only humans can learn.");
     learnErr.name = "400";
     throw learnErr;
   }

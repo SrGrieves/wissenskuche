@@ -7,6 +7,8 @@ import * as UnitKnowledge from './unit-knowledge';
 import * as TileResources from './tile-resources';
 import * as UnitEventRepo from '../repos/unit-event-repo';
 import * as TileEventRepo from '../repos/tile-event-repo';
+import * as gaea from '../io/gaea';
+import * as World from '../domain/world-entities';
 
 router.get('/player/:playerId/units/:unitId/abilities/', getUnitAbilityData);
 
@@ -57,12 +59,11 @@ function mapAbilityToAcquiredAbilityView(world: any, player: string, unit: strin
         
       ]
     }
-    }
   }
 }
 
 
-export async function attemptToDo(world: any, command: any): Promise<string> {
+export async function attemptToDo(world: World.World, command: World.AbilityCommand): Promise<string> {
 
 
   if(!command.ability || !command.unit) {
@@ -73,8 +74,8 @@ export async function attemptToDo(world: any, command: any): Promise<string> {
 
   let ability = world.abilities.filter(k => k.id == command.ability)[0];
   let unitKnowledge = await UnitKnowledge.getUnitKnowledge(command.unit, world);
-  let unitTile = 'y';
-  let tileResources = await TileResources.getResourcesForTile(unitTile, world, false);
+  let unitInfo = await gaea.getUnit(world, world.me.player, command.unit);
+  let tileResources = await TileResources.getResourcesForTile(unitInfo.tile, world, false);
   
   if(!ability || !unitKnowledge || !tileResources) {
     let abilityErr = new Error("Invalid ability or unit.");
