@@ -1,0 +1,5 @@
+{
+  "port": "WK_PORT",
+  "selfReferenceUrlPrefix": "WK_SELF_URL",
+  "gaeaReferenceUrlPrefix": "WK_GAEA_URL"
+}

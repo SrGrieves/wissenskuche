@@ -2,6 +2,8 @@ import webserver from './server';
 import config from 'config';
 import * as WorldEntities from './domain/world-entities'
 
+
+console.log('Starting wissenskuche with settings\n'+JSON.stringify(config,null," "));
 start();
 
 async function start() {
